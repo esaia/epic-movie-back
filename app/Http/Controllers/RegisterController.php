@@ -8,12 +8,14 @@ use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
 {
-    public function store(RegisterRequest $request)
+    public function store(RegisterRequest $request): JsonResponse
     {
         $attributes = $request->validated();
         $attributes['password'] = bcrypt($attributes['password']);
@@ -23,7 +25,7 @@ class RegisterController extends Controller
     }
 
 
-    public function verify(Request $request)
+    public function verify(Request $request): RedirectResponse
     {
         $user = User::find($request->route('id'));
         if (!hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
@@ -32,20 +34,24 @@ class RegisterController extends Controller
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
-        return redirect()->away(env('FRONT_APP_URL'. '/landing?modal=account-activation', 'http://localhost:3000/landing?modal=account-activation'));
+
+        $frontAppUrl = config('app.front_app_url', 'http://localhost:3000') . '/landing?modal=account-activation';
+
+        return redirect()->away($frontAppUrl);
     }
 
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
+
         $attributes = $request->validated();
 
         if(isset($attributes['remember']) && $attributes['remember']) {
             $remember=true;
-            unset($attributes['remember']);
         } else {
             $remember = false;
         }
+        unset($attributes['remember']);
 
         $loginField = filter_var($attributes['email'], FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
@@ -56,27 +62,24 @@ class RegisterController extends Controller
             unset($attributes['email']);
         };
 
-        $user = User::where($loginField, $attributes[$loginField])->first();
-        if(!$user || !Hash::check($attributes['password'], $user->password)) {
-            return Response()->json(['msg' => "bad credantils"]);
-        }
-        if($remember) {
-            $token = $user->createToken('authtoken', ['remember'])->plainTextToken;
-        } else {
-            $token = $user->createToken('authtoken')->plainTextToken;
+
+        if (!auth()->attempt($attributes, $remember)) {
+            throw ValidationException::withMessages(['email' =>  "Email or password is incorrect"  ]);
         }
 
-        return Response()->json(['access_token' => $token, 'user' => $user], 201);
+        session()->regenerate();
+
+        return Response()->json([ 'user' => $attributes], 201);
     }
 
 
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
         return Response()->json(['msg' => "user logged out",], 201);
     }
 
-    public function getUser(Request $request)
+    public function getUser(Request $request): mixed
     {
         return $request->user();
     }

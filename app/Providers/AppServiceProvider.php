@@ -2,12 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Sanctum\PersonalAccessToken;
-use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,15 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Model::unguard();
-
-
-        Sanctum::authenticateAccessTokensUsing(function (PersonalAccessToken $token, $isValid) {
-            if($isValid) {
-                return true;
-            }
-            return $token->can('remember') && $token->created_at->gt(now()->subYears(5));
-        });
 
 
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
@@ -42,6 +32,22 @@ class AppServiceProvider extends ServiceProvider
                 ->line('Click the button below to verify your email address.')
                 ->action('Verify Email Address', $url);
         });
+
+
+
+        ResetPassword::toMailUsing(function (object $notifiable, string $token) {
+            $email = request()->input('email');
+            $name = User::where('email', $email)->first()->name;
+
+            $url = url(route('password.reset', ['token' => $token], false));
+            $url = $url . '?email=' . $email;
+
+
+            return (new MailMessage())
+            ->view('email.reset', ['url' => $url, 'name' => $name])
+                ->subject('Recover password');
+        });
+
 
 
     }
