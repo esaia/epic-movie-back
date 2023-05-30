@@ -1,19 +1,24 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\ForgetPasswordController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+Route::controller(RegisterController::class)->group(function () {
+    Route::post('/register', 'store')->name('register');
+    Route::get('/email/verify/{id}/{hash}', 'verify')->name('verification.verify');
+    Route::post('/login', 'login');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', 'logout');
+        Route::post('/user', 'getUser');
+    });
+});
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::controller(ForgetPasswordController::class)->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::post('/forgot-password', 'sendPasswordResetLink')->name('password.email');
+        Route::get('/reset-password/{token}', 'getToken')->name('password.reset');
+        Route::post('/update-password', 'updatePassword')->name('password.update');
+    });
 });
