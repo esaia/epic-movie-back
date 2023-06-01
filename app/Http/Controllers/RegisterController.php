@@ -41,17 +41,11 @@ class RegisterController extends Controller
 
     public function login(LoginRequest $request): JsonResponse
     {
-
         $attributes = $request->validated();
-
-        isset($attributes['remember']) && $attributes['remember'] ? $remember=true : $remember=false;
-
+        $remember = !!$attributes['remember'] ?? false;
         unset($attributes['remember']);
-
         $loginField = filter_var($attributes['email'], FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
-
         $attributes[$loginField] = $attributes['email'];
-
 
         if($loginField == 'email') {
             unset($attributes['name']);
