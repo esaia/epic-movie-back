@@ -9,8 +9,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
@@ -25,7 +25,7 @@ class RegisterController extends Controller
     }
 
 
-    public function verify(Request $request): RedirectResponse
+    public function verify(Request $request)
     {
         $user = User::find($request->route('id'));
         if (!hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
@@ -35,9 +35,7 @@ class RegisterController extends Controller
             event(new Verified($user));
         }
 
-        $frontAppUrl = config('app.front_app_url', 'http://localhost:3000') . '/landing?modal=account-activation';
-
-        return redirect()->away($frontAppUrl);
+        return Response()->json([ 'msg' => "user verified"], 201);
     }
 
 
@@ -56,6 +54,8 @@ class RegisterController extends Controller
         $loginField = filter_var($attributes['email'], FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
         $attributes[$loginField] = $attributes['email'];
+
+
         if($loginField == 'email') {
             unset($attributes['name']);
         } elseif($loginField == 'name') {
@@ -73,9 +73,9 @@ class RegisterController extends Controller
     }
 
 
-    public function logout(Request $request): JsonResponse
+    public function logout(): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        auth()->logout();
         return Response()->json(['msg' => "user logged out",], 201);
     }
 

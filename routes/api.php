@@ -15,6 +15,7 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 
+
 Route::controller(ForgetPasswordController::class)->group(function () {
     Route::middleware('guest')->group(function () {
         Route::post('/forgot-password', 'sendPasswordResetLink')->name('password.email');
@@ -22,3 +23,8 @@ Route::controller(ForgetPasswordController::class)->group(function () {
         Route::post('/update-password', 'updatePassword')->name('password.update');
     });
 });
+
+
+Route::get('/data', function () {
+    return Response()->json([ 'msg' => "this is protected data"], 201);
+})->middleware('auth:sanctum');

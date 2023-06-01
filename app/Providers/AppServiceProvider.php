@@ -26,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
 
 
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
+            $url = env('FRONT_APP_URL') . '/email-verify?url=' . $url;
+
             return (new MailMessage())
             ->view('email.verify', ['url' => $url, 'name' => request()->input('name')])
                 ->subject('Verify Email Address')
@@ -38,10 +40,7 @@ class AppServiceProvider extends ServiceProvider
         ResetPassword::toMailUsing(function (object $notifiable, string $token) {
             $email = request()->input('email');
             $name = User::where('email', $email)->first()->name;
-
-            $url = url(route('password.reset', ['token' => $token], false));
-            $url = $url . '?email=' . $email;
-
+            $url = env('FRONT_APP_URL') . '/reset-password?token=' . $token . '&email=' . $email;
 
             return (new MailMessage())
             ->view('email.reset', ['url' => $url, 'name' => $name])
