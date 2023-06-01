@@ -25,7 +25,7 @@ class RegisterController extends Controller
     }
 
 
-    public function verify(Request $request)
+    public function verify(Request $request): JsonResponse
     {
         $user = User::find($request->route('id'));
         if (!hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
@@ -44,11 +44,8 @@ class RegisterController extends Controller
 
         $attributes = $request->validated();
 
-        if(isset($attributes['remember']) && $attributes['remember']) {
-            $remember=true;
-        } else {
-            $remember = false;
-        }
+        isset($attributes['remember']) && $attributes['remember'] ? $remember=true : $remember=false;
+
         unset($attributes['remember']);
 
         $loginField = filter_var($attributes['email'], FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
