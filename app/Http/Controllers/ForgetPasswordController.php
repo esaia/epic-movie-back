@@ -6,7 +6,6 @@ use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -23,7 +22,7 @@ class ForgetPasswordController extends Controller
     }
 
 
-    public function getToken($token, Request $request): JsonResponse
+    public function getToken(): JsonResponse
     {
         return Response()->json([ 'msg' => "token created"], 201);
     }
