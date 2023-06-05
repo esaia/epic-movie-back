@@ -20,7 +20,7 @@ Route::controller(RegisterController::class)->group(function () {
 
 
 Route::controller(GoogleController::class)->group(function () {
-    Route::get('/auth/redirect', 'redirect')->middleware(['web']);
+    Route::get('/auth/redirect', 'redirect')->middleware(['api']);
     Route::get('/auth/callback', 'callback');
 });
 
@@ -31,13 +31,4 @@ Route::controller(ForgetPasswordController::class)->group(function () {
         Route::get('/reset-password/{token}', 'getToken')->name('password.reset');
         Route::post('/update-password', 'updatePassword')->name('password.update');
     });
-});
-
-
-Route::get('/data', function () {
-    return Response()->json([ 'msg' => "this is protected data"], 201);
-})->middleware('auth:sanctum');
-
-Route::get('/data1', function () {
-    return Response()->json([ 'msg' => "this is not protected data"], 201);
 });

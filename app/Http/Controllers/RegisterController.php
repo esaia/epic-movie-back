@@ -85,7 +85,7 @@ class RegisterController extends Controller
 
     public function logout(): JsonResponse
     {
-        Auth::guard('web')->logout();
+        Auth::guard('api')->logout();
 
         $response = new Response('Logged out');
         $response->cookie('XSRF-TOKEN', '', 0, '/', null, false, true);

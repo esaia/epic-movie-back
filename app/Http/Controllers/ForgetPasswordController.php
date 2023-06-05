@@ -22,10 +22,6 @@ class ForgetPasswordController extends Controller
     }
 
 
-    public function getToken(): JsonResponse
-    {
-        return Response()->json([ 'msg' => "token created"], 201);
-    }
 
     public function updatePassword(UpdatePasswordRequest $request): JsonResponse
     {
