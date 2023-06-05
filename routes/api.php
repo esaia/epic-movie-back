@@ -9,9 +9,9 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'store')->name('register');
     Route::get('/email/verify/{id}/{hash}', 'verify')->name('verification.verify');
     Route::post('/login', 'login');
+    Route::get('/logout', 'logout');
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/logout', 'logout');
         Route::post('/updateUser/{id}', 'updateUser');
         Route::get('/user', 'getUser');
     });

@@ -85,18 +85,17 @@ class RegisterController extends Controller
 
     public function logout(): JsonResponse
     {
-        Auth::guard('api')->logout();
 
-        $response = new Response('Logged out');
-        $response->cookie('XSRF-TOKEN', '', 0, '/', null, false, true);
+        auth()->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
 
-
-        return Response()->json(['msg' => "user logged out",], 201);
+        return Response()->json(['msg' => "user logged out",], 200);
     }
 
     public function getUser(Request $request): JsonResponse
     {
-        return Response()->json(['user' => $request->user()], 201);
+        return Response()->json(['user' => $request->user()], 200);
     }
 
 
