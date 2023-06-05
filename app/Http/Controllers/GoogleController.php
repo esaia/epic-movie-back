@@ -29,7 +29,7 @@ class GoogleController extends Controller
             ]);
 
             Auth::login($user);
-            return Response()->json([ 'user' => $user], 201);
+            return Response()->json([ 'user' => $user], 200);
 
         } catch (\Throwable $th) {
             return Response()->json([ 'msg' => 'something went wrong', 'error' => $th], 500);

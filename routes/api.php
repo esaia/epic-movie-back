@@ -28,7 +28,6 @@ Route::controller(GoogleController::class)->group(function () {
 Route::controller(ForgetPasswordController::class)->group(function () {
     Route::middleware('guest')->group(function () {
         Route::post('/forgot-password', 'sendPasswordResetLink')->name('password.email');
-        Route::get('/reset-password/{token}', 'getToken')->name('password.reset');
         Route::post('/update-password', 'updatePassword')->name('password.update');
     });
 });

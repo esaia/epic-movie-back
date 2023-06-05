@@ -18,7 +18,7 @@ class ForgetPasswordController extends Controller
             $request->only('email')
         );
 
-        return $status == Password::RESET_LINK_SENT ? Response()->json([ 'msg' => "password recovery link sent"], 201) : Response()->json([ 'msg' => "something went wrong"], 401);
+        return $status == Password::RESET_LINK_SENT ? Response()->json([ 'msg' => "password recovery link sent"], 200) : Response()->json([ 'msg' => "something went wrong"], 401);
     }
 
 

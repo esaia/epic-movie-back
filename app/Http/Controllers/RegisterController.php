@@ -37,7 +37,7 @@ class RegisterController extends Controller
             event(new Verified($user));
         }
 
-        return Response()->json([ 'msg' => "user verified"], 201);
+        return Response()->json([ 'msg' => "user verified"], 200);
     }
 
 
