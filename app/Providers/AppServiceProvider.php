@@ -41,7 +41,6 @@ class AppServiceProvider extends ServiceProvider
             $email = request()->input('email');
             $name = User::where('email', $email)->first()->name;
             $url = env('FRONT_APP_URL') . '/reset-password?token=' . $token . '&email=' . $email;
-
             return (new MailMessage())
             ->view('email.reset', ['url' => $url, 'name' => $name])
                 ->subject('Recover password');
