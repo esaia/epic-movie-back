@@ -39,8 +39,6 @@ Route::controller(ForgetPasswordController::class)->group(function () {
 
 
 Route::controller(MovieController::class)->group(function () {
-
-
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/movies', 'index');
         Route::get('/movies/{id}', 'show');

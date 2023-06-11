@@ -46,9 +46,9 @@ class MovieController extends Controller
         $movie = Movie::with(['quote' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }])->findOrFail($id);
-        if ($movie->user_id !== Auth::id()) {
-            throw new AuthorizationException('Unauthorized');
-        }
+
+        $this->authorize('isValidUser', $movie);
+
         return $movie;
     }
 
@@ -72,6 +72,7 @@ class MovieController extends Controller
             $attributes['img'] = $imgPath;
         }
         $movie = Movie::findOrFail($id);
+        $this->authorize('isValidUser', $movie);
         $movie->update($attributes);
         return  $movie;
     }
@@ -80,6 +81,7 @@ class MovieController extends Controller
     public function destroy($id): JsonResponse
     {
         $movie = Movie::findOrFail($id);
+        $this->authorize('isValidUser', $movie);
         $movie->delete();
         return Response()->json([ 'msg' => 'movie deleted'], 200);
     }
