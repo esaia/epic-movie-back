@@ -1,9 +1,13 @@
 <?php
 
 use App\Http\Controllers\ForgetPasswordController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Sanctum;
 
 Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'store')->name('register');
@@ -31,3 +35,31 @@ Route::controller(ForgetPasswordController::class)->group(function () {
         Route::post('/update-password', 'updatePassword')->name('password.update');
     });
 });
+
+
+
+Route::controller(MovieController::class)->group(function () {
+
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/movies', 'index');
+        Route::get('/movies/{id}', 'show');
+        Route::post('/movies', 'store');
+        Route::post('/movies/{id}', 'update');
+        Route::delete('/movies/{id}', 'destroy');
+    });
+});
+
+
+Route::controller(QuoteController::class)->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/quotes', 'index');
+        Route::post('/quotes', 'store');
+        Route::post('/quotes/{id}', 'update');
+        Route::delete('/quotes/{id}', 'destroy');
+    });
+});
+
+
+
+Route::get('/genres', [GenreController::class, 'index']);
