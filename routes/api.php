@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\CommentEvent;
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\GoogleController;
@@ -58,6 +60,13 @@ Route::controller(QuoteController::class)->group(function () {
     });
 });
 
+Route::controller(CommentsController::class)->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/comments/{quoteID}', 'index');
+        Route::post('/comments', 'store');
+    });
+
+});
 
 
 Route::get('/genres', [GenreController::class, 'index']);

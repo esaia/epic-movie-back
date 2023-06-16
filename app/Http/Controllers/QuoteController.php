@@ -5,13 +5,30 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateQuoteRequest;
 use App\Http\Requests\UpdateQuoteRequest;
 use App\Models\Quote;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class QuoteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $quotes = Quote::with('movie')->get();
-        return $quotes;
+
+
+        $perPage = 3;
+        $page = $request->query('page', 1);
+        $offset = ($page - 1) * $perPage;
+
+        $totalQuotes = Quote::all()->count();
+        $maxPage = ceil($totalQuotes / $perPage);
+
+
+        $quotes = Quote::orderBy('updated_at', 'desc')
+                        ->offset($offset)
+                        ->limit($perPage)
+                        ->get();
+
+
+        return response()->json(['quotes' => $quotes, 'maxPage' => $maxPage]);
     }
 
     public function store(CreateQuoteRequest $request)
@@ -19,7 +36,7 @@ class QuoteController extends Controller
         $attributes = $request->validated();
         $quote = ['en' => $attributes['quote_en'], 'ka' => $attributes['quote_ka']];
         $imgPath = $request->file('img')->store('public/quotes');
-        $quote = ['quote' =>  $quote, 'img' => $imgPath, 'movie_id' => $attributes['movie_id'] ];
+        $quote = ['quote' =>  $quote, 'img' => $imgPath, 'movie_id' => $attributes['movie_id'],'user_id' => $attributes['user_id'] ];
         $quote = Quote::create($quote);
         return $quote;
     }

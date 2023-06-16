@@ -13,10 +13,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        $genres = config('genres.genres');
+
+        $genres = config('genres');
 
         foreach ($genres as $genre) {
-            Genre::factory()->create(['label' => $genre, 'value' => $genre]);
+            Genre::factory()->create(['label' => $genre['label'], 'value' => $genre['value']]);
         }
 
 
