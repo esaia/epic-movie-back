@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
 use App\Models\Movie;
-use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Collection
     {
         $user = $request->user();
         $movies = $user->movie()->with('quote')->orderBy('created_at', 'desc')->get();
@@ -41,7 +40,7 @@ class MovieController extends Controller
     }
 
 
-    public function show($id)
+    public function show($id): Movie
     {
         $movie = Movie::with(['quote' => function ($query) {
             $query->orderBy('created_at', 'desc');

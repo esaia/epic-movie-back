@@ -38,4 +38,22 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
+    public function quote(): HasMany
+    {
+        return $this->hasMany(Quote::class);
+    }
+
+
+    public function comment(): HasMany
+    {
+        return $this->HasMany(Comment::class);
+    }
+
+
+    public function notification(): HasMany
+    {
+        return $this->HasMany(Notification::class);
+    }
+
+
 }
