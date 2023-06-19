@@ -41,13 +41,6 @@ class CommentsController extends Controller
         }
 
 
-        $payload = [
-            'quote_id'=> $comment->quote_id
-        ];
-
-        event(new CommentEvent($payload));
-
-
         return $comment;
     }
 }

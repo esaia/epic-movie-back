@@ -17,8 +17,6 @@ class QuoteController extends Controller
         $page = $request->query('page', 1);
         $offset = ($page - 1) * $perPage;
 
-        $totalQuotes = Quote::all()->count();
-        $maxPage = ceil($totalQuotes / $perPage);
 
 
         $quotes = Quote::orderBy('updated_at', 'desc')
@@ -26,8 +24,10 @@ class QuoteController extends Controller
                         ->limit($perPage)
                         ->get();
 
+        $totalPages = ceil(Quote::all()->count() / $perPage);
 
-        return response()->json(['quotes' => $quotes, 'maxPage' => $maxPage]);
+
+        return response()->json(['quotes' => $quotes, 'totalpages' => $totalPages, 'currentPage' => (int)$page]);
     }
 
     public function store(CreateQuoteRequest $request): Quote
