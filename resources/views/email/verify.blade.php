@@ -41,7 +41,7 @@
             If clicking doesn't work, you can try copying and pasting it to your browser:
         </p>
         <a href="{{ $url }}" style="text-decoration: none;">
-            <p style="color: #c4b599; max-width: 1000px; padding: 7px;">
+            <p style="color: #c4b599; max-width: 1000px; padding: 7px; width: 400px">
                 {{ $url }}
             </p>
         </a>

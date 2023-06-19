@@ -50,4 +50,10 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
+    public function notification(): HasMany
+    {
+        return $this->HasMany(Notification::class);
+    }
+
+
 }

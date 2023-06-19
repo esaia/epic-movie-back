@@ -1,15 +1,14 @@
 <?php
 
-use App\Events\CommentEvent;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Sanctum\Sanctum;
 
 Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'store')->name('register');
@@ -67,6 +66,16 @@ Route::controller(CommentsController::class)->group(function () {
     });
 
 });
+
+
+Route::controller(NotificationController::class)->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/notifications', 'index');
+        Route::get('/seen/{notificationId}', 'markAsSeen');
+    });
+});
+
+
 
 
 Route::get('/genres', [GenreController::class, 'index']);

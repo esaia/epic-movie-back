@@ -11,7 +11,7 @@ class Quote extends Model
 {
     use HasFactory;
 
-    protected $with = ['user', 'movie'];
+    protected $with = ['user', 'movie', 'comment'];
     protected $fillable = ['quote','img', 'movie_id', 'user_id'];
     public $casts = ['quote'=> 'array'];
 
@@ -29,6 +29,12 @@ class Quote extends Model
     public function comment(): HasMany
     {
         return $this->HasMany(Comment::class);
+    }
+
+
+    public function notification(): HasMany
+    {
+        return $this->HasMany(Notification::class);
     }
 
 
