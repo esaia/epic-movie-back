@@ -6,14 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CreateQuoteRequest extends FormRequest
 {
-    public function rules(): array
-    {
-        return [
-            'quote_en' => 'required',
-            'quote_ka' => 'required',
-            'img' => 'required|image',
-            'movie_id' => 'required',
-            'user_id' => 'required',
-        ];
-    }
+	public function rules(): array
+	{
+		return [
+			'quote_en' => 'required',
+			'quote_ka' => 'required',
+			'img'      => 'required|image',
+			'movie_id' => 'required',
+			'user_id'  => 'required',
+		];
+	}
 }

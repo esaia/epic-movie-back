@@ -8,30 +8,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Movie extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
+	protected $fillable = [
+		'title',
+		'genre',
+		'date',
+		'director',
+		'description',
+		'img',
+		'user_id',
+	];
 
-    protected $fillable = [
-        'title',
-        'genre',
-        'date',
-        'director',
-        'description',
-        'img',
-        'user_id'
-    ];
+	public $casts = ['genre'=> 'array', 'title'=> 'array', 'director'=> 'array', 'description'=> 'array'];
 
-    public $casts = ['genre'=> 'array', 'title'=> 'array', 'director'=> 'array' , 'description'=> 'array'];
+	public function user(): BelongsTo
+	{
+		return $this->BelongsTo(User::class);
+	}
 
-
-    public function user(): BelongsTo
-    {
-        return $this->BelongsTo(User::class);
-    }
-
-    public function quote()
-    {
-        return $this->hasMany(Quote::class);
-    }
-
+	public function quote()
+	{
+		return $this->hasMany(Quote::class);
+	}
 }

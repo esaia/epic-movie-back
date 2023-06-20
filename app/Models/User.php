@@ -11,49 +11,41 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens;
-    use HasFactory;
-    use Notifiable;
+	use HasApiTokens;
 
+	use HasFactory;
 
-    protected $fillable = ['name', 'email', 'password', 'img', 'google_id'];
+	use Notifiable;
 
+	protected $fillable = ['name', 'email', 'password', 'img', 'google_id'];
 
+	protected $hidden = [
+		'password',
+		'remember_token',
+	];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+	protected $casts = [
+		'email_verified_at' => 'datetime',
+		'password'          => 'hashed',
+	];
 
+	public function movie(): HasMany
+	{
+		return $this->hasMany(Movie::class);
+	}
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+	public function quote(): HasMany
+	{
+		return $this->hasMany(Quote::class);
+	}
 
+	public function comment(): HasMany
+	{
+		return $this->HasMany(Comment::class);
+	}
 
-    public function movie(): HasMany
-    {
-        return $this->hasMany(Movie::class);
-    }
-
-
-    public function quote(): HasMany
-    {
-        return $this->hasMany(Quote::class);
-    }
-
-
-    public function comment(): HasMany
-    {
-        return $this->HasMany(Comment::class);
-    }
-
-
-    public function notification(): HasMany
-    {
-        return $this->HasMany(Notification::class);
-    }
-
-
+	public function notification(): HasMany
+	{
+		return $this->HasMany(Notification::class);
+	}
 }
