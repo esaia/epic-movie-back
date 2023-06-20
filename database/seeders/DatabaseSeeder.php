@@ -10,22 +10,19 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    public function run(): void
-    {
+	public function run(): void
+	{
+		$genres = config('genres');
 
+		foreach ($genres as $genre) {
+			Genre::factory()->create(['label' => $genre['label'], 'value' => $genre['value']]);
+		}
 
-        $genres = config('genres');
+		User::factory(3)->create();
 
-        foreach ($genres as $genre) {
-            Genre::factory()->create(['label' => $genre['label'], 'value' => $genre['value']]);
-        }
-
-
-        User::factory(3)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-    }
+		// \App\Models\User::factory()->create([
+		//     'name' => 'Test User',
+		//     'email' => 'test@example.com',
+		// ]);
+	}
 }

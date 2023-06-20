@@ -9,16 +9,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class genreFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
-    {
-        return [
-           'label' => fake()->name(),
-           'value' => fake()->name()
-        ];
-    }
+	/**
+	 * Define the model's default state.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function definition(): array
+	{
+		return [
+			'label' => fake()->name(),
+			'value' => fake()->name(),
+		];
+	}
 }
