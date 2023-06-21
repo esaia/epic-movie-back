@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class QuoteController extends Controller
 {
-	public function index(Request $request)
+	public function index(Request $request): JsonResponse
 	{
 		$perPage = 6;
 		$page = $request->query('page', 1);
