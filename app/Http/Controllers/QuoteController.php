@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class QuoteController extends Controller
 {
-	public function index(Request $request)
+	public function index(Request $request): JsonResponse
 	{
 		$perPage = 6;
 		$page = $request->query('page', 1);
@@ -25,29 +25,26 @@ class QuoteController extends Controller
 
 		$searchQuery = $request->input('searchQuery');
 
-		if ($searchQuery) {
-			if (str_starts_with($searchQuery, '@')) {
-				$quotes = Quote::whereHas('movie', function ($query) use ($searchQuery) {
-					$query->where('title->en', 'like', '%' . substr($searchQuery, 1) . '%')->orWhere('title->ka', 'like', '%' . substr($searchQuery, 1) . '%');
-				})->get();
+		switch (true) {
+			case str_starts_with($searchQuery, '@'):
+				$quotes = Quote::searchByMovieTitle($searchQuery)->get();
 				$totalPages = ceil($quotes->count() / $perPage);
-				$quotes = Quote::whereHas('movie', function ($query) use ($searchQuery) {
-					$query->where('title->en', 'like', '%' . substr($searchQuery, 1) . '%')->orWhere('title->ka', 'like', '%' . substr($searchQuery, 1) . '%');
-				})
+				$quotes = Quote::searchByMovieTitle($searchQuery)
 					->offset($offset)
 					->limit($perPage)
+					->orderBy('updated_at', 'desc')
 					->get();
-			} elseif (str_starts_with($searchQuery, '#')) {
-				$quotes = Quote::where('quote->en', 'like', '%' . substr($searchQuery, 1) . '%')
-				->orWhere('quote->ka', 'like', '%' . substr($searchQuery, 1) . '%')
-				->get();
+				break;
+			case str_starts_with($searchQuery, '#'):
+				$quotes = Quote::query()->searchByQuote($searchQuery)->get();
 				$totalPages = ceil($quotes->count() / $perPage);
-				$quotes = Quote::where('quote->en', 'like', '%' . substr($searchQuery, 1) . '%')
-				->orWhere('quote->ka', 'like', '%' . substr($searchQuery, 1) . '%')
-				->offset($offset)
-				->limit($perPage)
-				->get();
-			} else {
+				$quotes = Quote::query()->searchByQuote($searchQuery)
+					->offset($offset)
+					->limit($perPage)
+					->orderBy('updated_at', 'desc')
+					->get();
+				break;
+			default:
 				$quotes = Quote::whereHas('movie', function ($query) use ($searchQuery) {
 					$query->where('title->en', 'like', '%' . $searchQuery . '%')->orWhere('title->ka', 'like', '%' . substr($searchQuery, 1) . '%');
 				})
@@ -64,8 +61,9 @@ class QuoteController extends Controller
 				->orWhere('quote->en', 'like', '%' . $searchQuery . '%')
 				->offset($offset)
 				->limit($perPage)
+				->orderBy('updated_at', 'desc')
 				->get();
-			}
+				break;
 		}
 
 		return response()->json(['quotes' => $quotes, 'totalpages' => $totalPages, 'currentPage' => (int)$page]);
