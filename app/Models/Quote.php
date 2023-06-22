@@ -50,4 +50,13 @@ class Quote extends Model
 		return $query->where('quote->en', 'like', '%' . substr($searchQuery, 1) . '%')
 				->orWhere('quote->ka', 'like', '%' . substr($searchQuery, 1) . '%');
 	}
+
+	public function scopeSearchTogether($query, $searchQuery)
+	{
+		return $query->whereHas('movie', function ($subQuery) use ($searchQuery) {
+			$subQuery->where('title->en', 'like', '%' . $searchQuery . '%')
+				->orWhere('title->ka', 'like', '%' . $searchQuery . '%');
+		})->orWhere('quote->en', 'like', '%' . $searchQuery . '%')
+				->orWhere('quote->ka', 'like', '%' . $searchQuery . '%');
+	}
 }

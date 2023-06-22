@@ -25,47 +25,44 @@ class QuoteController extends Controller
 
 		$searchQuery = $request->input('searchQuery');
 
-		if ($searchQuery) {
-			switch ($searchQuery[0]) {
-				case '@':
-					$quotes = Quote::searchByMovieTitle($searchQuery)->get();
-					$totalPages = ceil($quotes->count() / $perPage);
-					$quotes = Quote::searchByMovieTitle($searchQuery)
-						->offset($offset)
-						->limit($perPage)
-						->orderBy('updated_at', 'desc')
-						->get();
-					break;
-				case '#':
-					$quotes = Quote::query()->searchByQuote($searchQuery)->get();
-					$totalPages = ceil($quotes->count() / $perPage);
-					$quotes = Quote::query()->searchByQuote($searchQuery)
-						->offset($offset)
-						->limit($perPage)
-						->orderBy('updated_at', 'desc')
-						->get();
-					break;
-				default:
-					$quotes = Quote::whereHas('movie', function ($query) use ($searchQuery) {
-						$query->where('title->en', 'like', '%' . $searchQuery . '%')->orWhere('title->ka', 'like', '%' . $searchQuery . '%');
-					})
-					->orWhere('quote->ka', 'like', '%' . $searchQuery . '%')
-					->orWhere('quote->en', 'like', '%' . $searchQuery . '%')
-					->get();
+		if (!$searchQuery) {
+			return response()->json(['quotes' => $quotes, 'totalpages' => $totalPages, 'currentPage' => (int)$page]);
+		}
 
-					$totalPages = ceil($quotes->count() / $perPage);
+		switch ($searchQuery[0]) {
+			case '@':
 
-					$quotes = Quote::whereHas('movie', function ($query) use ($searchQuery) {
-						$query->where('title->en', 'like', '%' . $searchQuery . '%')->orWhere('title->ka', 'like', '%' . $searchQuery . '%');
-					})
-					->orWhere('quote->ka', 'like', '%' . $searchQuery . '%')
-					->orWhere('quote->en', 'like', '%' . $searchQuery . '%')
+				$quotesQuery = Quote::searchByMovieTitle($searchQuery);
+				$totalQuotesCount = $quotesQuery->count();
+				$totalPages = ceil($totalQuotesCount / $perPage);
+				$quotes = $quotesQuery
 					->offset($offset)
 					->limit($perPage)
 					->orderBy('updated_at', 'desc')
 					->get();
-					break;
-			}
+
+				break;
+			case '#':
+				$quotesQuery = Quote::searchByQuote($searchQuery);
+				$totalQuotesCount = $quotesQuery->count();
+				$totalPages = ceil($totalQuotesCount / $perPage);
+				$quotes = $quotesQuery
+					->offset($offset)
+					->limit($perPage)
+					->orderBy('updated_at', 'desc')
+					->get();
+
+				break;
+			default:
+				$quotesQuery = Quote::SearchTogether($searchQuery);
+				$totalQuotesCount = $quotesQuery->count();
+				$totalPages = ceil($totalQuotesCount / $perPage);
+				$quotes = $quotesQuery
+					->offset($offset)
+					->limit($perPage)
+					->orderBy('updated_at', 'desc')
+					->get();
+				break;
 		}
 
 		return response()->json(['quotes' => $quotes, 'totalpages' => $totalPages, 'currentPage' => (int)$page]);
