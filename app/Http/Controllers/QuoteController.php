@@ -10,29 +10,25 @@ use Illuminate\Http\Request;
 
 class QuoteController extends Controller
 {
-	public function index(Request $request): JsonResponse
+	public function index(Request $request)
 	{
+		$searchQuery = $request->input('searchQuery');
 		$perPage = 6;
 		$page = $request->query('page', 1);
 		$offset = ($page - 1) * $perPage;
 
-		$quotes = Quote::orderBy('updated_at', 'desc')
-						->offset($offset)
-						->limit($perPage)
-						->get();
-
-		$totalPages = ceil(Quote::all()->count() / $perPage);
-
-		$searchQuery = $request->input('searchQuery');
-
 		if (!$searchQuery) {
+			$quotes = Quote::orderBy('updated_at', 'desc')
+							->offset($offset)
+							->limit($perPage)
+							->get();
+			$totalPages = ceil(Quote::all()->count() / $perPage);
 			return response()->json(['quotes' => $quotes, 'totalpages' => $totalPages, 'currentPage' => (int)$page]);
 		}
 
 		switch ($searchQuery[0]) {
 			case '@':
-
-				$quotesQuery = Quote::searchByMovieTitle($searchQuery);
+				$quotesQuery = Quote::searchByMovieTitle('where', substr($searchQuery, 1));
 				$totalQuotesCount = $quotesQuery->count();
 				$totalPages = ceil($totalQuotesCount / $perPage);
 				$quotes = $quotesQuery
@@ -43,7 +39,7 @@ class QuoteController extends Controller
 
 				break;
 			case '#':
-				$quotesQuery = Quote::searchByQuote($searchQuery);
+				$quotesQuery = Quote::searchByQuote('where', substr($searchQuery, 1));
 				$totalQuotesCount = $quotesQuery->count();
 				$totalPages = ceil($totalQuotesCount / $perPage);
 				$quotes = $quotesQuery
@@ -54,7 +50,7 @@ class QuoteController extends Controller
 
 				break;
 			default:
-				$quotesQuery = Quote::SearchTogether($searchQuery);
+				$quotesQuery = Quote::searchByMovieTitle('where', $searchQuery)->searchByQuote('orWhere', $searchQuery);
 				$totalQuotesCount = $quotesQuery->count();
 				$totalPages = ceil($totalQuotesCount / $perPage);
 				$quotes = $quotesQuery

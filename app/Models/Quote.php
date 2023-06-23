@@ -37,26 +37,17 @@ class Quote extends Model
 		return $this->HasMany(Notification::class);
 	}
 
-	public function scopeSearchByMovieTitle($query, $searchQuery)
+	public function scopeSearchByMovieTitle($query, $condition, $searchQuery)
 	{
-		return $query->whereHas('movie', function ($subQuery) use ($searchQuery) {
-			$subQuery->where('title->en', 'like', '%' . substr($searchQuery, 1) . '%')
-				->orWhere('title->ka', 'like', '%' . substr($searchQuery, 1) . '%');
+		return $query->whereHas('movie', function ($subQuery) use ($condition, $searchQuery) {
+			$subQuery->{$condition}('title->en', 'like', '%' . $searchQuery . '%')
+				->orWhere('title->ka', 'like', '%' . $searchQuery . '%');
 		});
 	}
 
-	public function scopeSearchByQuote($query, $searchQuery)
+	public function scopeSearchByQuote($query, $condition, $searchQuery)
 	{
-		return $query->where('quote->en', 'like', '%' . substr($searchQuery, 1) . '%')
-				->orWhere('quote->ka', 'like', '%' . substr($searchQuery, 1) . '%');
-	}
-
-	public function scopeSearchTogether($query, $searchQuery)
-	{
-		return $query->whereHas('movie', function ($subQuery) use ($searchQuery) {
-			$subQuery->where('title->en', 'like', '%' . $searchQuery . '%')
-				->orWhere('title->ka', 'like', '%' . $searchQuery . '%');
-		})->orWhere('quote->en', 'like', '%' . $searchQuery . '%')
+		return $query->{$condition}('quote->en', 'like', '%' . $searchQuery . '%')
 				->orWhere('quote->ka', 'like', '%' . $searchQuery . '%');
 	}
 }
