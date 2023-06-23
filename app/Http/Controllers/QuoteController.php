@@ -28,7 +28,10 @@ class QuoteController extends Controller
 
 		switch ($searchQuery[0]) {
 			case '@':
-				$quotesQuery = Quote::searchByMovieTitle('where', substr($searchQuery, 1));
+				$quotesQuery = Quote::whereHas('movie', function ($subQuery) use ($searchQuery) {
+					$subQuery->searchByQuote('where', substr($searchQuery, 1), 'title');
+				});
+
 				$totalQuotesCount = $quotesQuery->count();
 				$totalPages = ceil($totalQuotesCount / $perPage);
 				$quotes = $quotesQuery
@@ -40,6 +43,7 @@ class QuoteController extends Controller
 				break;
 			case '#':
 				$quotesQuery = Quote::searchByQuote('where', substr($searchQuery, 1));
+
 				$totalQuotesCount = $quotesQuery->count();
 				$totalPages = ceil($totalQuotesCount / $perPage);
 				$quotes = $quotesQuery
@@ -50,7 +54,10 @@ class QuoteController extends Controller
 
 				break;
 			default:
-				$quotesQuery = Quote::searchByMovieTitle('where', $searchQuery)->searchByQuote('orWhere', $searchQuery);
+				$quotesQuery = Quote::whereHas('movie', function ($subQuery) use ($searchQuery) {
+					$subQuery->searchByQuote('where', substr($searchQuery, 1), 'title');
+				})->searchByQuote('orWhere', $searchQuery);
+
 				$totalQuotesCount = $quotesQuery->count();
 				$totalPages = ceil($totalQuotesCount / $perPage);
 				$quotes = $quotesQuery
