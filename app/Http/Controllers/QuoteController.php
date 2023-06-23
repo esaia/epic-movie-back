@@ -12,16 +12,61 @@ class QuoteController extends Controller
 {
 	public function index(Request $request): JsonResponse
 	{
+		$searchQuery = $request->input('searchQuery');
 		$perPage = 6;
 		$page = $request->query('page', 1);
 		$offset = ($page - 1) * $perPage;
 
-		$quotes = Quote::orderBy('updated_at', 'desc')
-						->offset($offset)
-						->limit($perPage)
-						->get();
+		if (!$searchQuery) {
+			$quotes = Quote::orderBy('updated_at', 'desc')
+							->offset($offset)
+							->limit($perPage)
+							->get();
+			$totalPages = ceil(Quote::all()->count() / $perPage);
+			return response()->json(['quotes' => $quotes, 'totalpages' => $totalPages, 'currentPage' => (int)$page]);
+		}
 
-		$totalPages = ceil(Quote::all()->count() / $perPage);
+		switch ($searchQuery[0]) {
+			case '@':
+				$quotesQuery = Quote::whereHas('movie', function ($subQuery) use ($searchQuery) {
+					$subQuery->searchByQuote('where', substr($searchQuery, 1), 'title');
+				});
+
+				$totalQuotesCount = $quotesQuery->count();
+				$totalPages = ceil($totalQuotesCount / $perPage);
+				$quotes = $quotesQuery
+					->offset($offset)
+					->limit($perPage)
+					->orderBy('updated_at', 'desc')
+					->get();
+
+				break;
+			case '#':
+				$quotesQuery = Quote::searchByQuote('where', substr($searchQuery, 1));
+
+				$totalQuotesCount = $quotesQuery->count();
+				$totalPages = ceil($totalQuotesCount / $perPage);
+				$quotes = $quotesQuery
+					->offset($offset)
+					->limit($perPage)
+					->orderBy('updated_at', 'desc')
+					->get();
+
+				break;
+			default:
+				$quotesQuery = Quote::whereHas('movie', function ($subQuery) use ($searchQuery) {
+					$subQuery->searchByQuote('where', substr($searchQuery, 1), 'title');
+				})->searchByQuote('orWhere', $searchQuery);
+
+				$totalQuotesCount = $quotesQuery->count();
+				$totalPages = ceil($totalQuotesCount / $perPage);
+				$quotes = $quotesQuery
+					->offset($offset)
+					->limit($perPage)
+					->orderBy('updated_at', 'desc')
+					->get();
+				break;
+		}
 
 		return response()->json(['quotes' => $quotes, 'totalpages' => $totalPages, 'currentPage' => (int)$page]);
 	}

@@ -36,4 +36,10 @@ class Quote extends Model
 	{
 		return $this->HasMany(Notification::class);
 	}
+
+	public function scopeSearchByQuote($query, $condition, $searchQuery, $keyWord = 'quote')
+	{
+		return $query->{$condition}("{$keyWord}->en", 'like', '%' . $searchQuery . '%')
+				->orWhere("{$keyWord}->ka", 'like', '%' . $searchQuery . '%');
+	}
 }
