@@ -37,17 +37,17 @@ class Quote extends Model
 		return $this->HasMany(Notification::class);
 	}
 
-	public function scopeSearchByMovieTitle($query, $condition, $searchQuery)
+	public function scopeSearchByMovieTitle($query, $condition, $searchQuery, $keyWord = 'title')
 	{
-		return $query->whereHas('movie', function ($subQuery) use ($condition, $searchQuery) {
-			$subQuery->{$condition}('title->en', 'like', '%' . $searchQuery . '%')
-				->orWhere('title->ka', 'like', '%' . $searchQuery . '%');
+		return $query->whereHas('movie', function ($subQuery) use ($condition, $searchQuery, $keyWord) {
+			$subQuery->{$condition}("{$keyWord}->en", 'like', '%' . $searchQuery . '%')
+				->orWhere("{$keyWord}->ka", 'like', '%' . $searchQuery . '%');
 		});
 	}
 
-	public function scopeSearchByQuote($query, $condition, $searchQuery)
+	public function scopeSearchByQuote($query, $condition, $searchQuery, $keyWord = 'quote')
 	{
-		return $query->{$condition}('quote->en', 'like', '%' . $searchQuery . '%')
-				->orWhere('quote->ka', 'like', '%' . $searchQuery . '%');
+		return $query->{$condition}("{$keyWord}->en", 'like', '%' . $searchQuery . '%')
+				->orWhere("{$keyWord}->ka", 'like', '%' . $searchQuery . '%');
 	}
 }
