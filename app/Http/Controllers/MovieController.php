@@ -5,16 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
 use App\Models\Movie;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class MovieController extends Controller
 {
-	public function index(Request $request): Collection
+	public function index(Request $request)
 	{
+		$searchQuery = $request->input('searchQuery');
 		$user = $request->user();
-		$movies = $user->movie()->with('quote')->orderBy('created_at', 'desc')->get();
+
+		if (!$searchQuery) {
+			$movies = $user->movie()->with('quote')->orderBy('created_at', 'desc')->get();
+			return $movies;
+		}
+
+		$movies = $user->movie()->searchByQuote('where', $searchQuery, 'title')->get();
 		return $movies;
 	}
 
