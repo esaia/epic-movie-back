@@ -13,8 +13,15 @@ class MovieController extends Controller
 {
 	public function index(Request $request): Collection
 	{
+		$searchQuery = $request->input('searchQuery');
 		$user = $request->user();
-		$movies = $user->movie()->with('quote')->orderBy('created_at', 'desc')->get();
+
+		if (!$searchQuery) {
+			$movies = $user->movie()->with('quote')->orderBy('created_at', 'desc')->get();
+			return $movies;
+		}
+
+		$movies = $user->movie()->searchByQuote('where', $searchQuery, 'title')->get();
 		return $movies;
 	}
 
