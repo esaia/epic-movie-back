@@ -4,6 +4,7 @@ use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\QuoteController;
@@ -64,6 +65,13 @@ Route::controller(NotificationController::class)->group(function () {
 	Route::middleware('auth:sanctum')->group(function () {
 		Route::get('/notifications', 'index');
 		Route::get('/seen/{notificationId}', 'markAsSeen');
+	});
+});
+
+Route::controller(LikeController::class)->group(function () {
+	Route::middleware('auth:sanctum')->group(function () {
+		Route::post('/like', 'store');
+		Route::delete('/like/{id}', 'destroy');
 	});
 });
 

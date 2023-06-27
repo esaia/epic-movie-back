@@ -11,7 +11,7 @@ class Quote extends Model
 {
 	use HasFactory;
 
-	protected $with = ['user', 'movie', 'comment'];
+	protected $with = ['user', 'movie', 'comment', 'like'];
 
 	protected $fillable = ['quote', 'img', 'movie_id', 'user_id'];
 
@@ -35,6 +35,11 @@ class Quote extends Model
 	public function notification(): HasMany
 	{
 		return $this->HasMany(Notification::class);
+	}
+
+	public function like(): HasMany
+	{
+		return $this->HasMany(Like::class);
 	}
 
 	public function scopeSearchByQuote($query, $condition, $searchQuery, $keyWord = 'quote')
