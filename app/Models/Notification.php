@@ -12,7 +12,7 @@ class Notification extends Model
 
 	protected $with = ['sender', 'quote'];
 
-	protected $fillable = ['sender_id', 'quote_id', 'user_id', 'seen'];
+	protected $fillable = ['sender_id', 'quote_id', 'user_id', 'seen', 'status'];
 
 	public function sender()
 	{

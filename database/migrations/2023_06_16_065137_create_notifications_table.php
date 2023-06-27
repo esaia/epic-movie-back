@@ -14,7 +14,7 @@ return new class() extends Migration {
 			$table->foreign('sender_id')->references('id')->on('users')->constrained()->cascadeOnDelete();
 			$table->foreign('quote_id')->references('id')->on('quotes')->constrained()->cascadeOnDelete();
 			$table->boolean('seen')->default(false);
-			$table->enum('status', ['comment', 'like']);
+			$table->enum('status', ['comment', 'like'])->default('comment');
 			$table->timestamps();
 		});
 	}
