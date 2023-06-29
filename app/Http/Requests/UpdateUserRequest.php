@@ -9,10 +9,11 @@ class UpdateUserRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'name'                  => 'string',
-			'password'              => 'string',
-			'password_confirmation' => 'string',
-			'img'                   => 'image',
+			'name'                   => 'unique:users,name',
+			'password'               => 'string',
+			'password_confirmation'  => 'string',
+			'email'                  => 'unique:users,email',
+			'img'                    => 'image',
 		];
 	}
 }
