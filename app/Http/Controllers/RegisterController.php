@@ -58,12 +58,15 @@ class RegisterController extends Controller
 		} elseif ($loginField == 'name') {
 			unset($attributes['email']);
 		}
+		$user = User::where($loginField, $attributes[$loginField])->first();
 
 		if (!auth()->attempt($attributes, $remember)) {
 			throw ValidationException::withMessages(['email' =>  'Email or password is incorrect']);
 		}
 
-		$user = User::where($loginField, $attributes[$loginField])->first();
+		if (!$user->email_verified_at) {
+			return Response()->json(['message' =>  'user email is not verified'], 403);
+		}
 
 		session()->regenerate();
 		return Response()->json(['user' => $user], 201);
