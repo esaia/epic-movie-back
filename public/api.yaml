@@ -1,0 +1,202 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Movie API
+basePath: /api
+
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /movies:
+    get:
+      summary: Get user's movies
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Movies"
+        404:
+          description: Movie not found
+  /quotes:
+    get:
+      summary: Get all quotes
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Quotes"
+        404:
+          description: Quote   not found
+  /movies/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: ID of the movie to retrieve
+        required: true
+        type: integer
+        format: int64
+    get:
+      summary: Get Movie by ID
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/MovieResponse"
+        404:
+          description: Quote not found
+
+definitions:
+  Movies:
+    type: array
+    items:
+      $ref: "#/definitions/MovieResponse"
+  Quotes:
+    type: object
+    properties:
+      quotes:
+        type: array
+        items:
+        $ref: "#/definitions/Quote"
+      totalPages:
+        type: integer
+      currentPage:
+        type: integer
+
+  MovieResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      user_id:
+        type: integer
+      title:
+        type: object
+        properties:
+          en:
+            type: string
+            example: "test"
+          ka:
+            type: string
+            example: "test"
+
+      genre:
+        type: array
+        items:
+          $ref: "#/definitions/Genre"
+      date:
+        type: string
+        format: date
+      director:
+        type: object
+        properties:
+          en:
+            type: string
+          ka:
+            type: string
+      description:
+        type: object
+        properties:
+          en:
+            type: string
+          ka:
+            type: string
+      img:
+        type: string
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+      quote:
+        type: array
+        items:
+          $ref: "#/definitions/Quote"
+  Genre:
+    type: object
+    properties:
+      id:
+        type: integer
+      label:
+        type: string
+      value:
+        type: string
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+  Quote:
+    type: object
+    properties:
+      id:
+        type: integer
+      quote:
+        type: object
+        properties:
+          en:
+            type: string
+          ka:
+            type: string
+      img:
+        type: string
+      movie_id:
+        type: integer
+      user_id:
+        type: integer
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+      user:
+        $ref: "#/definitions/User"
+      comment:
+        type: array
+        items:
+          $ref: "#/definitions/Comment"
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      email:
+        type: string
+      email_verified_at:
+        type: string
+        format: date-time
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+      google_id:
+        type: string
+      img:
+        type: string
+  Comment:
+    type: object
+    properties:
+      id:
+        type: integer
+      comment:
+        type: string
+      quote_id:
+        type: integer
+      user_id:
+        type: integer
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+      user:
+        $ref: "#/definitions/User"

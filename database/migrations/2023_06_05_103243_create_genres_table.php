@@ -9,7 +9,7 @@ return new class() extends Migration {
 	{
 		Schema::create('genres', function (Blueprint $table) {
 			$table->id();
-			$table->string('label');
+			$table->json('label');
 			$table->string('value');
 			$table->timestamps();
 		});

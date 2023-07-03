@@ -20,6 +20,8 @@ class Movie extends Model
 		'user_id',
 	];
 
+	protected $with = ['genres'];
+
 	public $casts = ['genre'=> 'array', 'title'=> 'array', 'director'=> 'array', 'description'=> 'array'];
 
 	public function user(): BelongsTo
@@ -30,6 +32,11 @@ class Movie extends Model
 	public function quote()
 	{
 		return $this->hasMany(Quote::class);
+	}
+
+	public function genres()
+	{
+		return $this->belongsToMany(Genre::class, 'movie_genre', 'movie_id', 'genre_id');
 	}
 
 	public function scopeSearchByQuote($query, $condition, $searchQuery, $keyWord = 'quote')

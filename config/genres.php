@@ -2,27 +2,27 @@
 
 return [
 	[
-		'label' => 'Action',
 		'value' => 'Action',
+		'label' => ['en' => 'Action', 'ka' => 'ექშენი'],
 	],
 	[
-		'label' => 'Adventure',
 		'value' => 'Adventure',
+		'label' => ['en' => 'Adventure', 'ka' => 'სათავგადასავლო'],
 	],
 	[
-		'label' => 'Comedy',
 		'value' => 'Comedy',
+		'label' => ['en' => 'Comedy', 'ka' => 'კომედია'],
 	],
 	[
-		'label' => 'Drama',
 		'value' => 'Drama',
+		'label' => ['en' => 'Drama', 'ka' => 'დრამა'],
 	],
 	[
-		'label' => 'Fantasy',
 		'value' => 'Fantasy',
+		'label' => ['en' => 'Fantasy', 'ka' => 'ფანტასტიკა'],
 	],
 	[
-		'label' => 'Horror',
 		'value' => 'Horror',
+		'label' => ['en' => 'Horror', 'ka' => 'საშინელებათა'],
 	],
 ];

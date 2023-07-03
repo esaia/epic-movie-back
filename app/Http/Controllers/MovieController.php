@@ -25,24 +25,29 @@ class MovieController extends Controller
 		return $movies;
 	}
 
-	public function store(CreateMovieRequest $request): Movie
+	public function store(CreateMovieRequest $request)
 	{
 		$attributes = $request->validated();
+
+		$genres = $attributes['genre'];
 		$imgPath = $request->file('img')->store('public/movies/');
 		$title = ['en' => $attributes['title_en'], 'ka' => $attributes['title_ka']];
 		$director = ['en' => $attributes['director_en'], 'ka' => $attributes['director_ka']];
 		$description = ['en' => $attributes['description_en'], 'ka' => $attributes['description_ka']];
-		$genre = json_decode($attributes['genre'], true);
+
 		$attributes = [
 			'title'       => $title,
-			'genre'       => $genre,
 			'date'        => $attributes['date'],
 			'director'    => $director,
 			'description' => $description,
 			'img'         => $imgPath,
 			'user_id'     => $attributes['user_id'],
 		];
+
 		$movie = Movie::Create($attributes);
+
+		$movie->genres()->attach(json_decode($genres));
+
 		return $movie;
 	}
 
@@ -61,13 +66,13 @@ class MovieController extends Controller
 	{
 		$attributes = $request->validated();
 
+		$genres = $attributes['genre'];
+
 		$title = ['en' => $attributes['title_en'], 'ka' => $attributes['title_ka']];
 		$director = ['en' => $attributes['director_en'], 'ka' => $attributes['director_ka']];
 		$description = ['en' => $attributes['description_en'], 'ka' => $attributes['description_ka']];
-		$genre = json_decode($attributes['genre'], true);
 		$attributes = [
 			'title'       => $title,
-			'genre'       => $genre,
 			'date'        => $attributes['date'],
 			'director'    => $director,
 			'description' => $description,
@@ -77,6 +82,10 @@ class MovieController extends Controller
 			$attributes['img'] = $imgPath;
 		}
 		$movie = Movie::findOrFail($id);
+		if ($movie) {
+			$movie->genres()->sync(json_decode($genres));
+		}
+
 		$this->authorize('isValidUser', $movie);
 		$movie->update($attributes);
 		return  $movie;
