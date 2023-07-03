@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Genre extends Model
 {
 	use HasFactory;
+
+	public $casts = ['label' => 'array'];
+
+	public function movies()
+	{
+		return $this->belongsToMany(Movie::class, 'movie_genre', 'genre_id', 'movie_id');
+	}
 }

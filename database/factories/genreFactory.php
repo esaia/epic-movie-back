@@ -18,7 +18,7 @@ class GenreFactory extends Factory
 	{
 		return [
 			'label' => fake()->name(),
-			'value' => fake()->name(),
+			'value' => ['ka' =>  fake()->name(), 'en'=> fake()->name()],
 		];
 	}
 }
