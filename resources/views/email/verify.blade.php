@@ -14,14 +14,29 @@
 </head>
 
 
-<body style="background-color: #191623;  align-items: center; font-family: 'Lato', sans-serif;">
+<body style="background-color: #191623;  align-items: center; font-family: 'Lato', sans-serif; padding: 20px">
 
 
-    <div style="padding-top: 30px;display:flex;flex-direction: column;justify-items: center;align-items: center">
-        <img src="https://i.ibb.co/qpn9zpj/bi-chat-quote-fill.png" alt=""
-            style="object-fit: cover; width: 20px; ">
-        <p style="color:white">Movie quotes</p>
-    </div>
+    <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+            <td>
+                <table align="center" width="100" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td>
+                            <div>
+                                <img src="https://i.ibb.co/qpn9zpj/bi-chat-quote-fill.png" alt=""
+                                    style="object-fit: cover; width: 20px; padding-left: 30px ">
+
+                                <p style="color:white">Movie quotes</p>
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
 
     <div style=" width: 100%; justify-items: center;  max-width: 1000px;">
         <p style="color:white; padding: 7px">Hola {{ $name }}!</p>

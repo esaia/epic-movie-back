@@ -35,41 +35,33 @@ Route::controller(ForgetPasswordController::class)->group(function () {
 	});
 });
 
-Route::controller(MovieController::class)->group(function () {
-	Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
+	Route::controller(MovieController::class)->group(function () {
 		Route::get('/movies', 'index');
 		Route::get('/movies/{id}', 'show');
 		Route::post('/movies', 'store');
 		Route::post('/movies/{id}', 'update');
 		Route::delete('/movies/{id}', 'destroy');
 	});
-});
 
-Route::controller(QuoteController::class)->group(function () {
-	Route::middleware('auth:sanctum')->group(function () {
+	Route::controller(QuoteController::class)->group(function () {
 		Route::get('/quotes', 'index');
 		Route::post('/quotes', 'store');
 		Route::post('/quotes/{id}', 'update');
 		Route::delete('/quotes/{id}', 'destroy');
 	});
-});
 
-Route::controller(CommentsController::class)->group(function () {
-	Route::middleware('auth:sanctum')->group(function () {
+	Route::controller(CommentsController::class)->group(function () {
 		Route::get('/comments/{quoteID}', 'index');
 		Route::post('/comments', 'store');
 	});
-});
 
-Route::controller(NotificationController::class)->group(function () {
-	Route::middleware('auth:sanctum')->group(function () {
+	Route::controller(NotificationController::class)->group(function () {
 		Route::get('/notifications', 'index');
 		Route::get('/seen/{notificationId}', 'markAsSeen');
 	});
-});
 
-Route::controller(LikeController::class)->group(function () {
-	Route::middleware('auth:sanctum')->group(function () {
+	Route::controller(LikeController::class)->group(function () {
 		Route::post('/like', 'store');
 		Route::delete('/like/{id}', 'destroy');
 	});
