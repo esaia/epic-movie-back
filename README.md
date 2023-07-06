@@ -5,6 +5,7 @@ This movie quote website is built using Laravel, a popular PHP framework. Users 
 ### Table of Contents
 
 -   [Tech Stack](#tech-stack)
+-   [Database](#Database)
 -   [Resources](#resources)
 -   [Getting Started](#getting-started)
 -   [Environment Variables](#environment-variables)
@@ -21,6 +22,12 @@ This movie quote website is built using Laravel, a popular PHP framework. Users 
 -   [Assignment](https://redberry.gitbook.io/assignment-iv-movie-quotes-1/)
 -   [figma](https://www.figma.com/file/5uMXCg3itJwpzh9cVIK3hA/Movie-Quotes-Bootcamp-assignment?type=design&node-id=0-1&mode=design)
 -   [Git semantic commits](https://redberry.gitbook.io/resources/other/git-is-semantikuri-komitebi)
+
+### Database
+
+To view the database structure, go to the following link: [drawsql](https://drawsql.app/teams/my-team-704/diagrams/epic-movie)
+
+![App Screenshot](/readme/drawsql.jpg)
 
 ### Getting Started
 

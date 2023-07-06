@@ -5,9 +5,10 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Genre;
+use App\Models\Movie;
+use App\Models\Quote;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Log;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,19 +17,17 @@ class DatabaseSeeder extends Seeder
 		$genres = config('genres');
 
 		foreach ($genres as $genre) {
-			Log::info($genre);
-
 			Genre::factory()->create([
 				'value' => $genre['value'],
 				'label' => $genre['label'],
 			]);
 		}
 
-		// User::factory(3)->create();
+		User::factory()->create(['name' => 'unique', 'password' => '123123123']);
+		User::factory(2)->create(['password' => '123123123']);
 
-		// \App\Models\User::factory()->create([
-		//     'name' => 'Test User',
-		//     'email' => 'test@example.com',
-		// ]);
+		Movie::factory()->create();
+
+		Quote::factory(2)->create();
 	}
 }
