@@ -81,7 +81,7 @@ To run this project, you will need to add the following environment variables to
 
 > GOOGLE_REDIRECT_URI=\*
 
-> FRONT_APP_URL=\*
+> APP_URL_FRONT=\*
 
 > SANCTUM_STATEFUL_DOMAINS=\*
 
