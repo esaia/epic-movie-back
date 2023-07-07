@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
 		ResetPassword::toMailUsing(function (object $notifiable, string $token) {
 			$email = request()->input('email');
 			$name = User::where('email', $email)->first()->name;
-			$url = env('FRONT_APP_URL', 'http://epic-movie-quotes-front.esaiag.redberryinternship.ge/
+			$url = env('FRONT_APP_URL', 'http://epic-movie-quotes-front.esaiag.redberryinternship.ge
 ') . '/reset-password?token=' . $token . '&email=' . $email;
 			return (new MailMessage())
 			->view('email.reset', ['url' => $url, 'name' => $name])
