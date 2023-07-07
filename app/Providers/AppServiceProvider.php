@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
 	public function boot(): void
 	{
 		VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
-			$url = env('FRONT_APP_URL') . '/email-verify?url=' . $url . '&email=' . request()->input('email');
+			$url = env('FRONT_APP_URL', 'http://epic-movie-quotes-front.esaiag.redberryinternship.ge') . '/email-verify?url=' . $url . '&email=' . request()->input('email');
 			return (new MailMessage())
 			->view('email.verify', ['url' => $url, 'name' => request()->input('name')])
 				->subject('Verify Email Address')
@@ -34,7 +34,8 @@ class AppServiceProvider extends ServiceProvider
 		ResetPassword::toMailUsing(function (object $notifiable, string $token) {
 			$email = request()->input('email');
 			$name = User::where('email', $email)->first()->name;
-			$url = env('FRONT_APP_URL') . '/reset-password?token=' . $token . '&email=' . $email;
+			$url = env('FRONT_APP_URL', 'http://epic-movie-quotes-front.esaiag.redberryinternship.ge/
+') . '/reset-password?token=' . $token . '&email=' . $email;
 			return (new MailMessage())
 			->view('email.reset', ['url' => $url, 'name' => $name])
 				->subject('Recover password');
