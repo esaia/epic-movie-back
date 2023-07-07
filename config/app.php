@@ -54,7 +54,8 @@ return [
 	|
 	*/
 
-	'url' => env('APP_URL', 'http://localhost'),
+	'url'           => env('APP_URL', 'http://localhost'),
+	'APP_URL_FRONT' => env('APP_URL_FRONT', 'http://epic-movie-quotes-front.esaiag.redberryinternship.ge'),
 
 	'asset_url' => env('ASSET_URL'),
 

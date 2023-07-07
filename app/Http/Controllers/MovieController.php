@@ -21,7 +21,7 @@ class MovieController extends Controller
 			return $movies;
 		}
 
-		$movies = $user->movie()->searchByQuote('where', $searchQuery, 'title')->get();
+		$movies = $user->movie()->with('quote')->orderBy('created_at', 'desc')->searchByQuote('where', $searchQuery, 'title')->get();
 		return $movies;
 	}
 
